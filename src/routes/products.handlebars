@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Produtos</title>
+</head>
+<body>
+  <h1>Lista de Produtos</h1>
+  <div>
+    {{#each products}}
+      <div>
+        <h2>{{this.title}}</h2>
+        <p>{{this.description}}</p>
+        <p><strong>Preço:</strong> R$ {{this.price}}</p>
+        <p><strong>Categoria:</strong> {{this.category}}</p>
+        <p><strong>Estoque:</strong> {{this.stock}}</p>
+        <a href="/products/{{this._id}}">Ver Detalhes</a>
+        <button onclick="addToCart('{{this._id}}')">Adicionar ao Carrinho</button>
+      </div>
+      <hr>
+    {{/each}}
+  </div>
+
+  <div>
+    {{#if pagination.hasPrevPage}}
+      <a href="{{pagination.prevPage}}">Página Anterior</a>
+    {{/if}}
+
+    <span>Página {{pagination.currentPage}} de {{pagination.totalPages}}</span>
+
+    {{#if pagination.hasNextPage}}
+      <a href="{{pagination.nextPage}}">Próxima Página</a>
+    {{/if}}
+  </div>
+
+  <script>
+    function addToCart(productId) {
+      fetch(`/api/carts/:cid/product/${productId}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ quantity: 1 }),
+      })
+      .then(response => response.json())
+      .then(data => alert('Produto adicionado ao carrinho!'))
+      .catch(error => console.error('Erro:', error));
+    }
+  </script>
+</body>
+</html>

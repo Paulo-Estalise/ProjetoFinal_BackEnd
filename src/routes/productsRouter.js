@@ -1,18 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const ProductRepository = require('../repositories/ProductRepository');
-const factory = require('../dao/mongo/factory');
+const Product = require('../models/ProductModel');
 
-const productRepository = new ProductRepository(factory.ProductDAO);
 
-router.get('/', async (req, res) => {
-    const products = await productRepository.getAll();
-    res.send(products);
+router.get('/produtos', async (req, res) => {
+    try {
+        const products = await Product.find();
+        res.status(200).json(products);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
-router.post('/', async (req, res) => {
-    const newProduct = await productRepository.create(req.body);
-    res.status(201).send(newProduct);
+// Rota para adicionar um novo produto
+router.post('/produtos', async (req, res) => {
+    try {
+        const productData = req.body;
+        const newProduct = new Product(productData);
+        await newProduct.save();
+        res.status(201).json(newProduct);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 module.exports = router;

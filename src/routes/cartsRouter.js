@@ -27,7 +27,7 @@ router.post('/:cid/purchase', async (req, res) => {
             }
         }
 
-        const purchaser = req.user.email; // Supondo que o usuário está logado
+        const purchaser = req.user.email; //  o usuário está logado
         const ticket = await TicketService.createTicket(totalAmount, purchaser);
 
         cart.products = cart.products.filter((item) =>
